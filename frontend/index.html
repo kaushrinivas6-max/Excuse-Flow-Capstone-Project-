@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0F1B2D">
+<title>ExcuseFlow — Academic Workflow Platform</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ─── LOGIN ─────────────────────────────────────────────────────── -->
+<div id="loginScreen" class="auth-page">
+  <div class="auth-bg"></div>
+
+  <!-- ─── STEP 1: Landing / Hero ─────────────────────────────────── -->
+  <div id="authLanding" class="auth-landing">
+    <div class="auth-landing-inner">
+      <div class="auth-brand" style="margin-bottom:32px">
+        <div class="brand-mark" style="width:56px;height:56px;font-size:20px">EF</div>
+        <div>
+          <h1 class="brand-name" style="font-size:32px;letter-spacing:-0.02em">ExcuseFlow</h1>
+          <p class="brand-tag" style="font-size:13px">Academic Workflow Platform</p>
+        </div>
+      </div>
+      <h2 class="auth-headline" style="font-size:64px;line-height:1;margin-bottom:18px">Built for the<br><em>modern campus.</em></h2>
+      <p class="auth-sub" style="font-size:16px;line-height:1.55;max-width:560px;margin-bottom:30px">Replace email-based absence chaos with a secure, auditable, real-time workflow that respects students, instructors, and TAs alike.</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:14px;margin-bottom:36px;max-width:760px">
+        <div class="landing-feature">
+          <div class="landing-feature-icon">⚡</div>
+          <div>
+            <strong>Real-time</strong>
+            <span>Notifications stream instantly across all four roles</span>
+          </div>
+        </div>
+        <div class="landing-feature">
+          <div class="landing-feature-icon">🔒</div>
+          <div>
+            <strong>Auditable</strong>
+            <span>Every action logged with tamper-evident integrity</span>
+          </div>
+        </div>
+        <div class="landing-feature">
+          <div class="landing-feature-icon">🎓</div>
+          <div>
+            <strong>Role-aware</strong>
+            <span>Students, instructors, TAs, and admins each see what they need</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:center">
+        <button onclick="goToAuthForm()" class="btn btn-gold" style="padding:14px 32px;font-size:15px;font-weight:700;letter-spacing:0.02em;box-shadow:var(--shadow-md)">
+          Get started →
+        </button>
+        <span style="font-size:13px;color:var(--ink-500)">Sign in or create a new account</span>
+      </div>
+    </div>
+    <p class="auth-foot" style="position:absolute;bottom:24px;left:0;right:0;text-align:center;font-size:11.5px;color:var(--ink-500)">FERPA Compliant · TLS 1.2+ Encrypted · ISTM 4210 Capstone Spring 2026</p>
+  </div>
+
+  <!-- ─── STEP 2: Auth form (sign-in / register) ─────────────────── -->
+  <div id="authFormScreen" class="auth-form-screen hidden">
+    <div class="auth-form-card">
+      <button type="button" onclick="goToAuthLanding()" class="btn btn-ghost btn-sm" style="align-self:flex-start;margin-bottom:18px;padding:6px 12px;font-size:12.5px;color:var(--ink-600)">← Back</button>
+
+      <div class="auth-brand" style="margin-bottom:24px">
+        <div class="brand-mark">EF</div>
+        <div>
+          <span class="brand-name" style="font-size:22px">ExcuseFlow</span>
+        </div>
+      </div>
+
+      <!-- Sign-in view (default) -->
+      <div id="signInView">
+        <h3 class="auth-form-title">Welcome back</h3>
+        <p class="auth-form-sub">Sign in with your institutional credentials</p>
+        <form id="loginForm" onsubmit="doLogin(event)">
+          <div class="field">
+            <label>Email</label>
+            <input type="email" id="loginEmail" value="student@gwu.edu" required autocomplete="username" spellcheck="false">
+          </div>
+          <div class="field">
+            <label>Password</label>
+            <input type="password" id="loginPassword" value="password123" required autocomplete="current-password">
+          </div>
+          <div id="loginError" class="alert alert-error hidden"></div>
+          <button type="submit" class="btn btn-primary btn-full" id="loginBtn">Sign In</button>
+        </form>
+
+        <div class="auth-divider"><span>Quick access</span></div>
+        <div class="role-grid">
+          <button class="role-card" onclick="quickSignIn('student@gwu.edu')">
+            <div class="role-card-mark" style="background:#C5841F">S</div>
+            <div>
+              <div class="role-card-name">Student</div>
+              <div class="role-card-email">student@gwu.edu</div>
+            </div>
+          </button>
+          <button class="role-card" onclick="quickSignIn('instructor@gwu.edu')">
+            <div class="role-card-mark" style="background:#2980B9">I</div>
+            <div>
+              <div class="role-card-name">Instructor</div>
+              <div class="role-card-email">instructor@gwu.edu</div>
+            </div>
+          </button>
+          <button class="role-card" onclick="quickSignIn('ta@gwu.edu')">
+            <div class="role-card-mark" style="background:#27AE60">T</div>
+            <div>
+              <div class="role-card-name">TA</div>
+              <div class="role-card-email">ta@gwu.edu</div>
+            </div>
+          </button>
+          <button class="role-card" onclick="quickSignIn('admin@gwu.edu')">
+            <div class="role-card-mark" style="background:#8E44AD">A</div>
+            <div>
+              <div class="role-card-name">Admin</div>
+              <div class="role-card-email">admin@gwu.edu</div>
+            </div>
+          </button>
+        </div>
+        <p class="auth-hint">Demo accounts use password <code>password123</code> — or <a href="#" onclick="toggleAuthView(event)" style="color:var(--gold-700);font-weight:600;text-decoration:none">create your own account</a></p>
+      </div>
+
+      <!-- Register view (hidden by default) -->
+      <div id="registerView" class="hidden">
+        <button type="button" onclick="toggleAuthView(event)" class="btn btn-ghost btn-sm" style="align-self:flex-start;margin-bottom:14px;padding:6px 12px;font-size:12.5px;color:var(--ink-600)">← Back to sign in</button>
+        <h3 class="auth-form-title">Create your account</h3>
+        <p class="auth-form-sub">Your account is stored in the database and persists across sessions</p>
+        <form id="registerForm" onsubmit="doRegister(event)">
+          <div class="field">
+            <label>Full name</label>
+            <input type="text" id="regName" required autocomplete="name" placeholder="Jane Doe">
+          </div>
+          <div class="field">
+            <label>Email</label>
+            <input type="email" id="regEmail" required autocomplete="email" placeholder="you@gwu.edu" spellcheck="false">
+          </div>
+          <div class="field">
+            <label>Password <span style="color:var(--ink-500);font-weight:400;font-size:11px">(8+ characters)</span></label>
+            <input type="password" id="regPassword" required autocomplete="new-password" minlength="8">
+          </div>
+          <div class="field">
+            <label>Role</label>
+            <select id="regRole" onchange="onRoleChange()">
+              <option value="student" selected>Student</option>
+              <option value="instructor">Instructor</option>
+              <option value="ta">Teaching Assistant</option>
+              <option value="admin">Administrator</option>
+            </select>
+          </div>
+
+          <!-- STUDENT extras -->
+          <div id="regStudentFields">
+            <div class="form-grid">
+              <div class="field">
+                <label>Class year</label>
+                <select id="regClassYear">
+                  <option>Freshman</option>
+                  <option selected>Sophomore</option>
+                  <option>Junior</option>
+                  <option>Senior</option>
+                  <option>Graduate</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Major</label>
+                <input type="text" id="regMajor" placeholder="Information Systems">
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Your courses <span style="color:var(--ink-500);font-weight:400;font-size:11px">(pick at least one)</span></label>
+
+              <!-- Selected course cards -->
+              <div id="regStudentCourseCards" style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px"></div>
+
+              <!-- Single, clear action button -->
+              <button type="button" onclick="openCoursePicker('student')" class="btn btn-ghost btn-full" style="border:1px dashed var(--gold-400);color:var(--gold-700);font-weight:600;padding:10px">
+                + Add a course
+              </button>
+              <p style="font-size:11.5px;color:var(--ink-500);margin-top:6px;line-height:1.45">Browse existing courses or create a new one. You can also add courses later from <strong>My Courses</strong> in your dashboard.</p>
+            </div>
+          </div>
+
+          <!-- INSTRUCTOR extras -->
+          <div id="regInstructorFields" class="hidden">
+            <div class="field">
+              <label>Department</label>
+              <select id="regInstructorDept">
+                <option>Information Systems</option>
+                <option>Computer Science</option>
+                <option>Business</option>
+                <option>Engineering</option>
+                <option>Mathematics</option>
+                <option>Psychology</option>
+                <option>Biology</option>
+                <option>Economics</option>
+                <option>English</option>
+                <option>Political Science</option>
+                <option>History</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Courses you teach <span style="color:var(--ink-500);font-weight:400;font-size:11px">(optional)</span></label>
+
+              <!-- Selected course cards -->
+              <div id="regInstructorCourseCards" style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px"></div>
+
+              <button type="button" onclick="openCoursePicker('instructor')" class="btn btn-ghost btn-full" style="border:1px dashed var(--gold-400);color:var(--gold-700);font-weight:600;padding:10px">
+                + Add a course you teach
+              </button>
+              <p style="font-size:11.5px;color:var(--ink-500);margin-top:6px;line-height:1.45">Pick from existing courses to teach a new section, or create something entirely new. You can also add courses later from the <strong>Courses</strong> page after signing in.</p>
+            </div>
+          </div>
+
+          <!-- TA extras -->
+          <div id="regTAFields" class="hidden">
+            <div class="field">
+              <label>Supervising instructor *</label>
+              <select id="regSupervisor">
+                <option value="">Loading…</option>
+              </select>
+              <p style="font-size:11.5px;color:var(--ink-500);margin-top:4px">You'll appear in this instructor's TA queue for approved requests.</p>
+            </div>
+          </div>
+
+          <!-- ADMIN extras -->
+          <div id="regAdminFields" class="hidden">
+            <div class="field">
+              <label>Department you administer *</label>
+              <select id="regAdminDept">
+                <option value="Institution-wide">Institution-wide (all departments)</option>
+                <option value="Information Systems">Information Systems</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Business">Business</option>
+                <option value="Engineering">Engineering</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="Psychology">Psychology</option>
+                <option value="Biology">Biology</option>
+                <option value="Economics">Economics</option>
+                <option value="English">English</option>
+                <option value="Political Science">Political Science</option>
+                <option value="History">History</option>
+                <option value="Other">Other</option>
+              </select>
+              <p style="font-size:11.5px;color:var(--ink-500);margin-top:4px">You'll only see escalations from this department. Choose "Institution-wide" for full access.</p>
+            </div>
+          </div>
+
+          <div id="registerError" class="alert alert-error hidden" style="margin-top:16px"></div>
+
+          <div style="margin-top:24px;padding:20px;background:var(--gold-50);border:2px solid var(--gold-300);border-radius:var(--radius);text-align:center">
+            <button type="submit" class="btn btn-gold btn-full" id="registerBtn" style="padding:16px;font-size:15px;font-weight:700;letter-spacing:0.02em;box-shadow:var(--shadow-md)">
+              Create account &amp; sign in →
+            </button>
+            <p class="auth-hint" style="margin-top:12px">Already have an account? <a href="#" onclick="toggleAuthView(event)" style="color:var(--gold-700);font-weight:600;text-decoration:none">Sign in instead</a></p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── APP SHELL ────────────────────────────────────────────────── -->
+<div id="app" class="app hidden">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark">EF</div>
+      <div>
+        <div class="sidebar-name">ExcuseFlow</div>
+        <div class="sidebar-sub">v2.0</div>
+      </div>
+    </div>
+    <nav id="sidebarNav" class="sidebar-nav"></nav>
+    <div class="sidebar-foot">
+      <div class="live-indicator" id="liveIndicator">
+        <span class="live-dot"></span>
+        <span>Live</span>
+      </div>
+      <button class="kbd-hint" onclick="openCommandPalette()">
+        <span>Search</span>
+        <kbd>⌘K</kbd>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <h1 class="page-title" id="pageTitle">Dashboard</h1>
+      <p class="page-crumb" id="pageCrumb"></p>
+    </div>
+    <div class="topbar-right">
+      <button class="icon-btn" onclick="openCommandPalette()" title="Search (⌘K)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      </button>
+      <button class="icon-btn notif-btn" id="bellBtn" onclick="toggleNotif()" title="Notifications">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+        <span class="notif-badge hidden" id="notifBadge">0</span>
+      </button>
+      <div class="user-menu" onclick="toggleUserMenu()">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <div class="user-meta">
+          <div class="user-name" id="userName">Loading…</div>
+          <div class="user-role" id="userRole"></div>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="user-dropdown hidden" id="userDropdown">
+        <div class="user-dropdown-header">
+          <div class="user-name" id="userNameFull"></div>
+          <div class="user-email" id="userEmailFull"></div>
+        </div>
+        <button class="dropdown-item" onclick="logout()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sign out
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main class="main" id="main">
+    <div class="loading"><div class="spinner"></div></div>
+  </main>
+</div>
+
+<!-- Notification panel (slide-out) -->
+<div class="notif-panel hidden" id="notifPanel">
+  <div class="notif-panel-header">
+    <h3>Notifications</h3>
+    <button class="link-btn" onclick="markAllRead()">Mark all read</button>
+  </div>
+  <div class="notif-list" id="notifList"></div>
+</div>
+
+<!-- Command palette -->
+<div class="cmdk-overlay hidden" id="cmdkOverlay" onclick="closeCommandPalette(event)">
+  <div class="cmdk" onclick="event.stopPropagation()">
+    <div class="cmdk-input-wrap">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="text" id="cmdkInput" placeholder="Search pages, requests, courses…" oninput="renderCmdkResults()" onkeydown="cmdkKeyDown(event)">
+      <kbd>esc</kbd>
+    </div>
+    <div class="cmdk-results" id="cmdkResults"></div>
+  </div>
+</div>
+
+<!-- Modal overlay -->
+<div class="modal-overlay hidden" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal" onclick="event.stopPropagation()"></div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="api.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
